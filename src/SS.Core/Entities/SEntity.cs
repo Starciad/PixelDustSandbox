@@ -1,9 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 
+using StardustSandbox.Core.Enums.World;
 using StardustSandbox.Core.Interfaces;
 using StardustSandbox.Core.Interfaces.Collections;
 using StardustSandbox.Core.Interfaces.World;
 using StardustSandbox.Core.Objects;
+
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace StardustSandbox.Core.Entities
 {
@@ -14,6 +18,7 @@ namespace StardustSandbox.Core.Entities
         public Vector2 Position { get; set; }
         public Vector2 Scale { get; set; }
         public float Rotation { get; set; }
+        public SWorldLayer Layer { get; set; }
 
         protected ISWorld SWorldInstance { get; set; }
 
@@ -42,9 +47,23 @@ namespace StardustSandbox.Core.Entities
             OnDestroyed();
         }
 
+        internal IReadOnlyDictionary<string, object> Serialize()
+        {
+            Dictionary<string, object> data = [];
+
+            OnSerialized(data);
+
+            return data;
+        }
+
+        internal void Deserialize(IReadOnlyDictionary<string, object> data)
+        {
+            OnDeserialized(data);
+        }
+
         #region Events
-        protected virtual void OnSerialized() { return; }
-        protected virtual void OnDeserialized() { return; }
+        protected virtual void OnSerialized(IDictionary<string, object> data) { return; }
+        protected virtual void OnDeserialized(IReadOnlyDictionary<string, object> data) { return; }
         protected virtual void OnRestarted() { return; }
         protected virtual void OnDestroyed() { return; }
         #endregion

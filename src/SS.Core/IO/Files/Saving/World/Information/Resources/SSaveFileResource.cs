@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 
-namespace StardustSandbox.Core.IO.Files.Saving.World.Information
+namespace StardustSandbox.Core.IO.Files.Saving.World.Information.Resources
 {
     [MessagePackObject]
     public sealed class SSaveFileResource(uint index, string value)

@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace StardustSandbox.Core.IO.Files.Saving.World.Information
+namespace StardustSandbox.Core.IO.Files.Saving.World.Information.Resources
 {
     [MessagePackObject]
     public sealed class SSaveFileResourceContainer

@@ -3,12 +3,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 using StardustSandbox.Core.Constants;
 using StardustSandbox.Core.Constants.IO;
+using StardustSandbox.Core.Entities;
 using StardustSandbox.Core.Enums.World;
 using StardustSandbox.Core.Extensions;
 using StardustSandbox.Core.Interfaces.World;
 using StardustSandbox.Core.IO.Files.Saving;
+using StardustSandbox.Core.IO.Files.Saving.World.Content.Entities;
 using StardustSandbox.Core.IO.Files.Saving.World.Content.Slots;
 using StardustSandbox.Core.IO.Files.Saving.World.Information;
+using StardustSandbox.Core.IO.Files.Saving.World.Information.Resources;
 using StardustSandbox.Core.Mathematics.Primitives;
 using StardustSandbox.Core.World.Slots;
 
@@ -89,6 +92,7 @@ namespace StardustSandbox.Core.IO.Handlers
                     Content = new()
                     {
                         Slots = CreateWorldSlotsData(resources, world, world.Infos.Size),
+                        Entities = CreateEntityData(resources, world),
                     },
                 },
             };
@@ -146,6 +150,7 @@ namespace StardustSandbox.Core.IO.Handlers
             return new()
             {
                 Elements = GetAllWorldDistinctElements(world),
+                Entities = GetAllWorldDistinctEntities(world),
             };
         }
 
@@ -200,6 +205,26 @@ namespace StardustSandbox.Core.IO.Handlers
             return container;
         }
 
+        private static SSaveFileResourceContainer GetAllWorldDistinctEntities(ISWorld world)
+        {
+            SSaveFileResourceContainer container = new();
+
+            foreach (SEntity entity in world.ActiveEntities)
+            {
+                if (entity == null)
+                {
+                    continue;
+                }
+
+                if (!container.ContainsValue(entity.Descriptor.Identifier))
+                {
+                    container.Add(entity.Descriptor.Identifier);
+                }
+            }
+
+            return container;
+        }
+
         private static IEnumerable<SSaveFileWorldSlot> CreateWorldSlotsData(SSaveFileWorldResources resources, ISWorld world, SSize2 worldSize)
         {
             for (int y = 0; y < worldSize.Height; y++)
@@ -213,6 +238,14 @@ namespace StardustSandbox.Core.IO.Handlers
                         yield return new(resources, world.GetWorldSlot(position));
                     }
                 }
+            }
+        }
+
+        private static IEnumerable<SSaveFileEntity> CreateEntityData(SSaveFileWorldResources resources, ISWorld world)
+        {
+            foreach (SEntity entity in world.ActiveEntities)
+            {
+                yield return new(resources, entity);
             }
         }
     }

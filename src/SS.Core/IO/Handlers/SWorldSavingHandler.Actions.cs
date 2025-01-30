@@ -6,9 +6,11 @@ using StardustSandbox.Core.Constants;
 using StardustSandbox.Core.Constants.IO;
 using StardustSandbox.Core.IO.Files.Saving;
 using StardustSandbox.Core.IO.Files.Saving.Header;
+using StardustSandbox.Core.IO.Files.Saving.World.Content.Entities;
 using StardustSandbox.Core.IO.Files.Saving.World.Content.Slots;
 using StardustSandbox.Core.IO.Files.Saving.World.Environment;
 using StardustSandbox.Core.IO.Files.Saving.World.Information;
+using StardustSandbox.Core.IO.Files.Saving.World.Information.Resources;
 
 using System;
 using System.Collections.Generic;
@@ -24,6 +26,7 @@ namespace StardustSandbox.Core.IO.Handlers
         private static string HeaderInformationFilePath => Path.Combine(SDirectoryConstants.SAVE_FILE_HEADER, SFileConstants.SAVE_FILE_HEADER_INFORMATION);
         private static string WorldInformationFilePath => Path.Combine(SDirectoryConstants.SAVE_FILE_WORLD, SFileConstants.SAVE_FILE_WORLD_INFORMATION);
         private static string WorldResourceElementsFilePath => Path.Combine(SDirectoryConstants.SAVE_FILE_WORLD, SDirectoryConstants.SAVE_FILE_WORLD_RESOURCES, SFileConstants.SAVE_FILE_WORLD_RESOURCE_ELEMENTS);
+        private static string WorldResourceEntitiesFilePath => Path.Combine(SDirectoryConstants.SAVE_FILE_WORLD, SDirectoryConstants.SAVE_FILE_WORLD_RESOURCES, SFileConstants.SAVE_FILE_WORLD_RESOURCE_ENTITIES);
         private static string WorldContentSlotsFilePath => Path.Combine(SDirectoryConstants.SAVE_FILE_WORLD, SDirectoryConstants.SAVE_FILE_WORLD_CONTENT, SFileConstants.SAVE_FILE_WORLD_CONTENT_SLOTS);
         private static string WorldContentEntitiesFilePath => Path.Combine(SDirectoryConstants.SAVE_FILE_WORLD, SDirectoryConstants.SAVE_FILE_WORLD_CONTENT, SFileConstants.SAVE_FILE_WORLD_CONTENT_ENTITIES);
         private static string WorldEnvironmentTimeFilePath => Path.Combine(SDirectoryConstants.SAVE_FILE_WORLD, SDirectoryConstants.SAVE_FILE_WORLD_ENVIRONMENT, SFileConstants.SAVE_FILE_WORLD_ENVIRONMENT_TIME);
@@ -86,6 +89,16 @@ namespace StardustSandbox.Core.IO.Handlers
                     saveFile.World.Resources.Elements = MessagePackSerializer.Deserialize<SSaveFileResourceContainer>(stream, MessagePackSerializerOptions.Standard);
                 }
             },
+
+            {
+                // ROOT/world/resources/entities.pdworlddata
+                WorldResourceEntitiesFilePath,
+                (entry, saveFile, _) =>
+                {
+                    using Stream stream = entry.Open();
+                    saveFile.World.Resources.Entities = MessagePackSerializer.Deserialize<SSaveFileResourceContainer>(stream, MessagePackSerializerOptions.Standard);
+                }
+            },
             #endregion
 
             #region Content
@@ -103,7 +116,8 @@ namespace StardustSandbox.Core.IO.Handlers
                 WorldContentEntitiesFilePath,
                 (entry, saveFile, _) =>
                 {
-
+                    using Stream stream = entry.Open();
+                    saveFile.World.Content.Entities = MessagePackSerializer.Deserialize<IEnumerable<SSaveFileEntity>>(stream, MessagePackSerializerOptions.Standard);
                 }
             },
             #endregion
@@ -150,17 +164,26 @@ namespace StardustSandbox.Core.IO.Handlers
             #endregion
 
             #region World
+
+            #region General
             // ROOT/world/information.pdworlddata
             using (Stream worldInformationStreamWriter = saveFileZipArchive.CreateEntry(WorldInformationFilePath).Open())
             {
                 worldInformationStreamWriter.Write(MessagePackSerializer.Serialize(worldSaveFile.World.Information));
             }
+            #endregion
 
             #region Resources
             // ROOT/world/resources/elements.pdworlddata
             using (Stream worldResourcesStreamWriter = saveFileZipArchive.CreateEntry(WorldResourceElementsFilePath).Open())
             {
                 worldResourcesStreamWriter.Write(MessagePackSerializer.Serialize(worldSaveFile.World.Resources.Elements));
+            }
+
+            // ROOT/world/resources/entities.pdworlddata
+            using (Stream worldResourcesStreamWriter = saveFileZipArchive.CreateEntry(WorldResourceEntitiesFilePath).Open())
+            {
+                worldResourcesStreamWriter.Write(MessagePackSerializer.Serialize(worldSaveFile.World.Resources.Entities));
             }
             #endregion
 
@@ -172,10 +195,10 @@ namespace StardustSandbox.Core.IO.Handlers
             }
 
             // ROOT/world/content/entities.pdworlddata
-            // using (Stream worldContentEntitiesStreamWriter = saveFileZipArchive.CreateEntry(WorldContentEntitiesFilePath).Open())
-            // {
-            // 
-            // }
+            using (Stream worldContentEntitiesStreamWriter = saveFileZipArchive.CreateEntry(WorldContentEntitiesFilePath).Open())
+            {
+                worldContentEntitiesStreamWriter.Write(MessagePackSerializer.Serialize(worldSaveFile.World.Content.Entities));
+            }
             #endregion
 
             #region Environment

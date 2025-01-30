@@ -1,12 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 
 using StardustSandbox.Core.Constants;
+using StardustSandbox.Core.Entities;
 using StardustSandbox.Core.Enums.Simulation;
 using StardustSandbox.Core.Enums.World;
 using StardustSandbox.Core.Interfaces.Collections;
 using StardustSandbox.Core.IO.Files.Saving;
+using StardustSandbox.Core.IO.Files.Saving.World.Content.Entities;
 using StardustSandbox.Core.IO.Files.Saving.World.Content.Slots;
 using StardustSandbox.Core.IO.Files.Saving.World.Information;
+using StardustSandbox.Core.IO.Files.Saving.World.Information.Resources;
 using StardustSandbox.Core.Mathematics.Primitives;
 using StardustSandbox.Core.World.Slots;
 
@@ -14,12 +17,11 @@ namespace StardustSandbox.Core.World
 {
     internal sealed partial class SWorld
     {
-        #region Start New
+        #region System
         public void StartNew()
         {
             StartNew(this.Infos.Size);
         }
-
         public void StartNew(SSize2 size)
         {
             this.IsActive = true;
@@ -31,6 +33,26 @@ namespace StardustSandbox.Core.World
             }
 
             Reset();
+        }
+        public void Resize(SSize2 size)
+        {
+            DestroyWorldSlots();
+
+            this.Infos.Size = size;
+            this.slots = new SWorldSlot[size.Width, size.Height];
+
+            InstantiateWorldSlots();
+        }
+        public void Reload()
+        {
+            if (this.currentlySelectedWorldSaveFile != null)
+            {
+                LoadFromWorldSaveFile(this.currentlySelectedWorldSaveFile);
+            }
+            else
+            {
+                Clear();
+            }
         }
         #endregion
 
@@ -54,61 +76,119 @@ namespace StardustSandbox.Core.World
             this.Time.SetTime(worldSaveFile.World.Environment.Time.CurrentTime);
             this.Time.IsFrozen = worldSaveFile.World.Environment.Time.IsFrozen;
 
-            // Allocate Slots
-            foreach (SSaveFileWorldSlot worldSlotData in worldSaveFile.World.Content.Slots)
+            // Load Slots
+            foreach (SSaveFileWorldSlot worldSlot in worldSaveFile.World.Content.Slots)
             {
-                if (worldSlotData.ForegroundLayer != null)
+                if (worldSlot.ForegroundLayer != null)
                 {
-                    LoadWorldSlotLayerData(worldSaveFile.World.Resources, SWorldLayer.Foreground, worldSlotData.Position, worldSlotData.ForegroundLayer);
+                    LoadWorldSlotLayer(worldSaveFile.World.Resources.Elements, SWorldLayer.Foreground, worldSlot.Position, worldSlot.ForegroundLayer);
                 }
 
-                if (worldSlotData.BackgroundLayer != null)
+                if (worldSlot.BackgroundLayer != null)
                 {
-                    LoadWorldSlotLayerData(worldSaveFile.World.Resources, SWorldLayer.Background, worldSlotData.Position, worldSlotData.BackgroundLayer);
+                    LoadWorldSlotLayer(worldSaveFile.World.Resources.Elements, SWorldLayer.Background, worldSlot.Position, worldSlot.BackgroundLayer);
                 }
             }
+
+            // Load Entities
+            foreach (SSaveFileEntity entity in worldSaveFile.World.Content.Entities)
+            {
+                LoadEntity(worldSaveFile.World.Resources.Entities, entity);
+            }
         }
-        private void LoadWorldSlotLayerData(SSaveFileWorldResources resources, SWorldLayer worldLayer, Point position, SSaveFileWorldSlotLayer worldSlotLayerData)
+        private void LoadWorldSlotLayer(SSaveFileResourceContainer resourceContainer, SWorldLayer worldLayer, Point position, SSaveFileWorldSlotLayer saveFileWorldSlotLayer)
         {
-            InstantiateElement(position, worldLayer, resources.Elements.FindValueByIndex(worldSlotLayerData.ElementIndex));
+            InstantiateElement(position, worldLayer, resourceContainer.FindValueByIndex(saveFileWorldSlotLayer.ElementIndex));
 
             SWorldSlot worldSlot = GetWorldSlot(position);
 
-            worldSlot.SetTemperatureValue(worldLayer, worldSlotLayerData.Temperature);
-            worldSlot.SetFreeFalling(worldLayer, worldSlotLayerData.FreeFalling);
-            worldSlot.SetColorModifier(worldLayer, worldSlotLayerData.ColorModifier);
-            worldSlot.SetStoredElement(worldLayer, this.SGameInstance.ElementDatabase.GetElementByIdentifier(resources.Elements.FindValueByIndex(worldSlotLayerData.StoredElementIndex)));
+            worldSlot.SetTemperatureValue(worldLayer, saveFileWorldSlotLayer.Temperature);
+            worldSlot.SetFreeFalling(worldLayer, saveFileWorldSlotLayer.FreeFalling);
+            worldSlot.SetColorModifier(worldLayer, saveFileWorldSlotLayer.ColorModifier);
+            worldSlot.SetStoredElement(worldLayer, this.SGameInstance.ElementDatabase.GetElementByIdentifier(resourceContainer.FindValueByIndex(saveFileWorldSlotLayer.StoredElementIndex)));
+        }
+        private void LoadEntity(SSaveFileResourceContainer resourceContainer, SSaveFileEntity saveFileEntity)
+        {
+            _ = InstantiateEntity(resourceContainer.FindValueByIndex(saveFileEntity.EntityIndex), (SEntity entity) =>
+            {
+                entity.Deserialize(saveFileEntity.Data);
+            });
         }
         #endregion
 
-        public void Resize(SSize2 size)
+        #region Clear
+        public void Clear()
         {
-            DestroyWorldSlots();
-
-            this.Infos.Size = size;
-            this.slots = new SWorldSlot[size.Width, size.Height];
-
-            InstantiateWorldSlots();
+            ClearSlots();
+            ClearEntities();
         }
-
-        public void Reload()
+        private void ClearSlots()
         {
-            if (this.currentlySelectedWorldSaveFile != null)
+            if (this.slots == null)
             {
-                LoadFromWorldSaveFile(this.currentlySelectedWorldSaveFile);
+                return;
             }
-            else
+
+            for (int x = 0; x < this.Infos.Size.Width; x++)
             {
-                Clear();
+                for (int y = 0; y < this.Infos.Size.Height; y++)
+                {
+                    if (IsEmptyWorldSlot(new(x, y)))
+                    {
+                        continue;
+                    }
+
+                    RemoveElement(new(x, y), SWorldLayer.Foreground);
+                    RemoveElement(new(x, y), SWorldLayer.Background);
+                }
             }
         }
-
-        public bool InsideTheWorldDimensions(Point position)
+        private void ClearEntities()
         {
-            return position.X >= 0 && position.X < this.Infos.Size.Width &&
-                   position.Y >= 0 && position.Y < this.Infos.Size.Height;
+            RemoveAllEntities();
         }
+        #endregion
 
+        #region Build and Destroy World
+        private void InstantiateWorldSlots()
+        {
+            if (this.slots == null || this.slots.Length == 0)
+            {
+                return;
+            }
+
+            for (int y = 0; y < this.Infos.Size.Height; y++)
+            {
+                for (int x = 0; x < this.Infos.Size.Width; x++)
+                {
+                    this.slots[x, y] = this.worldSlotsPool.TryGet(out ISPoolableObject value) ? (SWorldSlot)value : new();
+                }
+            }
+        }
+        private void DestroyWorldSlots()
+        {
+            if (this.slots == null || this.slots.Length == 0)
+            {
+                return;
+            }
+
+            for (int y = 0; y < this.Infos.Size.Height; y++)
+            {
+                for (int x = 0; x < this.Infos.Size.Width; x++)
+                {
+                    if (this.slots[x, y] == null)
+                    {
+                        continue;
+                    }
+
+                    this.worldSlotsPool.Add(this.slots[x, y]);
+                    this.slots[x, y] = null;
+                }
+            }
+        }
+        #endregion
+
+        #region Tools
         public void SetSpeed(SSimulationSpeed speed)
         {
             switch (speed)
@@ -134,79 +214,10 @@ namespace StardustSandbox.Core.World
                     break;
             }
         }
-
-        #region Clear
-        public void Clear()
+        public bool InsideTheWorldDimensions(Point position)
         {
-            ClearSlots();
-            ClearEntities();
-        }
-
-        private void ClearSlots()
-        {
-            if (this.slots == null)
-            {
-                return;
-            }
-
-            for (int x = 0; x < this.Infos.Size.Width; x++)
-            {
-                for (int y = 0; y < this.Infos.Size.Height; y++)
-                {
-                    if (IsEmptyWorldSlot(new(x, y)))
-                    {
-                        continue;
-                    }
-
-                    RemoveElement(new(x, y), SWorldLayer.Foreground);
-                    RemoveElement(new(x, y), SWorldLayer.Background);
-                }
-            }
-        }
-
-        private void ClearEntities()
-        {
-            RemoveAllEntity();
-        }
-        #endregion
-
-        #region Build and Destroy World
-        private void InstantiateWorldSlots()
-        {
-            if (this.slots == null || this.slots.Length == 0)
-            {
-                return;
-            }
-
-            for (int y = 0; y < this.Infos.Size.Height; y++)
-            {
-                for (int x = 0; x < this.Infos.Size.Width; x++)
-                {
-                    this.slots[x, y] = this.worldSlotsPool.TryGet(out ISPoolableObject value) ? (SWorldSlot)value : new();
-                }
-            }
-        }
-
-        private void DestroyWorldSlots()
-        {
-            if (this.slots == null || this.slots.Length == 0)
-            {
-                return;
-            }
-
-            for (int y = 0; y < this.Infos.Size.Height; y++)
-            {
-                for (int x = 0; x < this.Infos.Size.Width; x++)
-                {
-                    if (this.slots[x, y] == null)
-                    {
-                        continue;
-                    }
-
-                    this.worldSlotsPool.Add(this.slots[x, y]);
-                    this.slots[x, y] = null;
-                }
-            }
+            return position.X >= 0 && position.X < this.Infos.Size.Width &&
+                   position.Y >= 0 && position.Y < this.Infos.Size.Height;
         }
         #endregion
     }

@@ -11,6 +11,7 @@ namespace StardustSandbox.Core.World
     internal sealed partial class SWorld
     {
         public int ActiveEntitiesCount => this.instantiatedEntities.Count;
+        public IEnumerable<SEntity> ActiveEntities => this.instantiatedEntities;
 
         private readonly List<SEntity> instantiatedEntities = new(SEntityConstants.ACTIVE_ENTITIES_LIMIT);
         private readonly Dictionary<string, SObjectPool> entityPools = [];
@@ -69,7 +70,7 @@ namespace StardustSandbox.Core.World
             entity.Destroy();
         }
 
-        public void RemoveAllEntity()
+        public void RemoveAllEntities()
         {
             for (int i = 0; i < this.ActiveEntitiesCount; i++)
             {
@@ -84,7 +85,7 @@ namespace StardustSandbox.Core.World
             }
         }
 
-        public void DestroyAllEntity()
+        public void DestroyAllEntities()
         {
             for (int i = 0; i < this.ActiveEntitiesCount; i++)
             {

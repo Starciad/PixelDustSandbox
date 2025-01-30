@@ -23,6 +23,7 @@ namespace StardustSandbox.Core.Constants.IO
 
         public const string SAVE_FILE_WORLD_INFORMATION = "information" + SFileExtensionConstants.WORLD_DATA;
         public const string SAVE_FILE_WORLD_RESOURCE_ELEMENTS = "elements" + SFileExtensionConstants.WORLD_DATA;
+        public const string SAVE_FILE_WORLD_RESOURCE_ENTITIES = "entities" + SFileExtensionConstants.WORLD_DATA;
         public const string SAVE_FILE_WORLD_CONTENT_SLOTS = "slots" + SFileExtensionConstants.WORLD_DATA;
         public const string SAVE_FILE_WORLD_CONTENT_ENTITIES = "entities" + SFileExtensionConstants.WORLD_DATA;
         public const string SAVE_FILE_WORLD_ENVIRONMENT_TIME = "time" + SFileExtensionConstants.WORLD_DATA;
