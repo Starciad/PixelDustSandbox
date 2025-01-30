@@ -43,7 +43,9 @@ namespace StardustSandbox.Core.World
             this.worldSlotsPool = new();
             this.componentContainer = new(gameInstance);
 
-            this.worldChunkingComponent = (SWorldChunkingComponent)this.componentContainer.AddComponent(new SWorldChunkingComponent(gameInstance, this));
+            this.worldChunkingComponent = new(gameInstance, this);
+
+            _ = this.componentContainer.AddComponent(this.worldChunkingComponent);
             _ = this.componentContainer.AddComponent(new SWorldUpdatingComponent(gameInstance, this));
             _ = this.componentContainer.AddComponent(new SWorldRenderingComponent(gameInstance, this));
 

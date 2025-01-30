@@ -7,7 +7,7 @@ using StardustSandbox.Core.Enums.World;
 using StardustSandbox.Core.Extensions;
 using StardustSandbox.Core.Interfaces.World;
 using StardustSandbox.Core.IO.Files.Saving;
-using StardustSandbox.Core.IO.Files.Saving.World.Content;
+using StardustSandbox.Core.IO.Files.Saving.World.Content.Slots;
 using StardustSandbox.Core.IO.Files.Saving.World.Information;
 using StardustSandbox.Core.Mathematics.Primitives;
 using StardustSandbox.Core.World.Slots;

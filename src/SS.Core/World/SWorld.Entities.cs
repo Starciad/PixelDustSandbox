@@ -39,7 +39,7 @@ namespace StardustSandbox.Core.World
             if (!objectPool.TryGet(out ISPoolableObject value))
             {
                 SEntityDescriptor entityDescriptor = this.SGameInstance.EntityDatabase.GetEntityDescriptor(entityIdentifier);
-                value = entityDescriptor.CreateEntity(this.SGameInstance);
+                value = entityDescriptor.CreateEntity();
             }
 
             entity = value as SEntity;
@@ -60,7 +60,7 @@ namespace StardustSandbox.Core.World
         public void RemoveEntity(SEntity entity)
         {
             _ = this.instantiatedEntities.Remove(entity);
-            this.entityPools[entity.Identifier].Add(entity);
+            this.entityPools[entity.Descriptor.Identifier].Add(entity);
         }
 
         public void DestroyEntity(SEntity entity)

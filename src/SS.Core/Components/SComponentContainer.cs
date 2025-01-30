@@ -11,7 +11,7 @@ namespace StardustSandbox.Core.Components
 {
     public sealed class SComponentContainer(ISGame gameInstance) : SGameObject(gameInstance), ISResettable
     {
-        private readonly List<SComponent> components = [];
+        private readonly HashSet<SComponent> components = [];
 
         public override void Initialize()
         {
@@ -37,10 +37,22 @@ namespace StardustSandbox.Core.Components
             }
         }
 
-        public SComponent AddComponent(SComponent value)
+        public bool AddComponent<T>(T value) where T : SComponent
         {
-            this.components.Add(value);
-            return value;
+            return this.components.Add(value);
+        }
+
+        public T GetComponent<T>() where T : SComponent
+        {
+            foreach (SComponent component in this.components)
+            {
+                if (component is T typedComponent)
+                {
+                    return typedComponent;
+                }
+            }
+
+            return null;
         }
 
         public void Reset()

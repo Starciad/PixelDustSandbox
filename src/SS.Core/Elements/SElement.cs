@@ -18,6 +18,7 @@ namespace StardustSandbox.Core.Elements
 {
     public abstract class SElement : SGameObject, ISElement
     {
+        #region Properties
         public string Identifier => this.identifier;
         public Texture2D Texture => this.texture;
 
@@ -38,9 +39,9 @@ namespace StardustSandbox.Core.Elements
 
         public SElementRendering Rendering => this.rendering;
         public ISElementContext Context { get => this.context; set => this.context = value; }
+        #endregion
 
-        // =========================== //
-
+        #region
         private readonly string identifier = string.Empty;
 
         protected Texture2D texture = null;
@@ -62,6 +63,7 @@ namespace StardustSandbox.Core.Elements
         private ISElementContext context;
 
         private readonly SElementRendering rendering;
+        #endregion
 
         public SElement(ISGame gameInstance, string identifier) : base(gameInstance)
         {

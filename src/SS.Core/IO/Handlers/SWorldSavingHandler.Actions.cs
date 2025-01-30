@@ -6,7 +6,7 @@ using StardustSandbox.Core.Constants;
 using StardustSandbox.Core.Constants.IO;
 using StardustSandbox.Core.IO.Files.Saving;
 using StardustSandbox.Core.IO.Files.Saving.Header;
-using StardustSandbox.Core.IO.Files.Saving.World.Content;
+using StardustSandbox.Core.IO.Files.Saving.World.Content.Slots;
 using StardustSandbox.Core.IO.Files.Saving.World.Environment;
 using StardustSandbox.Core.IO.Files.Saving.World.Information;
 

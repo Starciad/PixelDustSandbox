@@ -9,7 +9,7 @@ namespace StardustSandbox.ContentBundle
     {
         protected override void OnRegisterEntities(ISGame game, ISEntityDatabase entityDatabase)
         {
-            entityDatabase.RegisterEntityDescriptor(new SMagicCursorEntityDescriptor(SEntityConstants.MAGIC_CURSOR_IDENTIFIER));
+            entityDatabase.RegisterEntityDescriptor(new SMagicCursorEntityDescriptor(game, SEntityConstants.MAGIC_CURSOR_IDENTIFIER));
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using StardustSandbox.Core.IO.Files.Saving.World.Content.Slots;
+
+using System.Collections.Generic;
 
 namespace StardustSandbox.Core.IO.Files.Saving.World.Content
 {

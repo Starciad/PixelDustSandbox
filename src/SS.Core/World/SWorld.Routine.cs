@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using StardustSandbox.Core.Entities;
+
 namespace StardustSandbox.Core.World
 {
     internal sealed partial class SWorld
@@ -75,15 +77,17 @@ namespace StardustSandbox.Core.World
 
         private void DrawEntities(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            this.instantiatedEntities.ForEach(entity =>
+            for (int i = 0; i < this.instantiatedEntities.Count; i++)
             {
+                SEntity entity = this.instantiatedEntities[i];
+
                 if (entity == null)
                 {
-                    return;
+                    continue;
                 }
 
                 entity.Draw(gameTime, spriteBatch);
-            });
+            }
         }
         #endregion
     }

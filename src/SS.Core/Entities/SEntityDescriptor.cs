@@ -2,10 +2,11 @@
 
 namespace StardustSandbox.Core.Entities
 {
-    public abstract class SEntityDescriptor(string identifier)
+    public abstract class SEntityDescriptor(ISGame gameInstance, string identifier)
     {
         public string Identifier => identifier;
+        protected ISGame SGameInstance => gameInstance;
 
-        public abstract SEntity CreateEntity(ISGame gameInstance);
+        public abstract SEntity CreateEntity();
     }
 }

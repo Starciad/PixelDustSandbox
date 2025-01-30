@@ -1,43 +1,52 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
-using StardustSandbox.Core.Components;
 using StardustSandbox.Core.Interfaces;
 using StardustSandbox.Core.Interfaces.Collections;
+using StardustSandbox.Core.Interfaces.World;
 using StardustSandbox.Core.Objects;
 
 namespace StardustSandbox.Core.Entities
 {
-    public abstract class SEntity(ISGame gameInstance, string identifier) : SGameObject(gameInstance), ISPoolableObject
+    public abstract class SEntity : SGameObject, ISPoolableObject
     {
-        public string Identifier => identifier;
-        public SComponentContainer ComponentContainer => this.componentContainer;
+        public SEntityDescriptor Descriptor => descriptor;
 
-        private readonly SComponentContainer componentContainer = new(gameInstance);
+        public Vector2 Position { get; set; }
+        public Vector2 Scale { get; set; }
+        public float Rotation { get; set; }
 
-        public override void Initialize()
+        protected ISWorld SWorldInstance { get; set; }
+
+        private readonly SEntityDescriptor descriptor;
+
+        public SEntity(ISGame gameInstance, SEntityDescriptor descriptor) : base(gameInstance)
         {
-            this.componentContainer.Initialize();
+            this.descriptor = descriptor;
+
+            this.SWorldInstance = gameInstance.World;
+
+            Reset();
         }
 
-        public override void Update(GameTime gameTime)
+        public void Reset()
         {
-            this.componentContainer.Update(gameTime);
+            this.Position = Vector2.Zero;
+            this.Scale = Vector2.One;
+            this.Rotation = 0f;
+
+            OnRestarted();
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Destroy()
         {
-            this.componentContainer.Draw(gameTime, spriteBatch);
+            OnDestroyed();
         }
 
-        public virtual void Destroy()
-        {
-            return;
-        }
-
-        public virtual void Reset()
-        {
-            this.componentContainer.Reset();
-        }
+        #region Events
+        protected virtual void OnSerialized() { return; }
+        protected virtual void OnDeserialized() { return; }
+        protected virtual void OnRestarted() { return; }
+        protected virtual void OnDestroyed() { return; }
+        #endregion
     }
 }

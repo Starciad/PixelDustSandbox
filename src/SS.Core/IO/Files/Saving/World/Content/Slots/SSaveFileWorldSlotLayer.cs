@@ -6,7 +6,7 @@ using StardustSandbox.Core.Enums.General;
 using StardustSandbox.Core.IO.Files.Saving.World.Information;
 using StardustSandbox.Core.World.Slots;
 
-namespace StardustSandbox.Core.IO.Files.Saving.World.Content
+namespace StardustSandbox.Core.IO.Files.Saving.World.Content.Slots
 {
     [MessagePackObject]
     public sealed class SSaveFileWorldSlotLayer
