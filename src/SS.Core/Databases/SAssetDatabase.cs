@@ -72,9 +72,9 @@ namespace StardustSandbox.Core.Databases
 
         // =============================================================== //
 
-        internal Effect[] GetAllEffects()
+        internal IEnumerable<Effect> GetAllEffects()
         {
-            return [.. this.effects.Values];
+            return this.effects.Values;
         }
     }
 }

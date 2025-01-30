@@ -14,7 +14,7 @@ namespace StardustSandbox.Core.Managers
 
         public override void Initialize()
         {
-            this.effects = ((SAssetDatabase)this.SGameInstance.AssetDatabase).GetAllEffects();
+            this.effects = [.. ((SAssetDatabase)this.SGameInstance.AssetDatabase).GetAllEffects()];
             this.effectsLength = this.effects.Length;
         }
 

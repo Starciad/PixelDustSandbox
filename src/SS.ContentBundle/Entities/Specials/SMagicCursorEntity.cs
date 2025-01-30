@@ -31,9 +31,9 @@ namespace StardustSandbox.ContentBundle.Entities.Specials
 
         internal SMagicCursorEntity(ISGame gameInstance, string identifier) : base(gameInstance, identifier)
         {
-            this.transformComponent = this.ComponentContainer.AddComponent(new SEntityTransformComponent(this.SGameInstance, this));
-            this.graphicsComponent = this.ComponentContainer.AddComponent(new SEntityGraphicsComponent(this.SGameInstance, this));
-            this.renderingComponent = this.ComponentContainer.AddComponent(new SEntityRenderingComponent(this.SGameInstance, this, this.transformComponent, this.graphicsComponent));
+            this.transformComponent = (SEntityTransformComponent)this.ComponentContainer.AddComponent(new SEntityTransformComponent(this.SGameInstance, this));
+            this.graphicsComponent = (SEntityGraphicsComponent)this.ComponentContainer.AddComponent(new SEntityGraphicsComponent(this.SGameInstance, this));
+            this.renderingComponent = (SEntityRenderingComponent)this.ComponentContainer.AddComponent(new SEntityRenderingComponent(this.SGameInstance, this, this.transformComponent, this.graphicsComponent));
             _ = this.ComponentContainer.AddComponent(new SMagicCursorAIComponent(this.SGameInstance, this, this.transformComponent));
 
             // Graphics
