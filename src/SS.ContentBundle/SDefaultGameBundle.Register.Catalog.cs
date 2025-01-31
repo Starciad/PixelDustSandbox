@@ -22,6 +22,13 @@ namespace StardustSandbox.ContentBundle
                 game.AssetDatabase.GetTexture("icon_element_1")
             );
 
+            SCategory entityCategory = new(
+                "entities",
+                "Entities",
+                string.Empty,
+                game.AssetDatabase.GetTexture("icon_element_1")
+            );
+
             SCategory toolCategory = new(
                 "tools",
                 SLocalization_Catalog.Category_Tools_Name,
@@ -30,6 +37,7 @@ namespace StardustSandbox.ContentBundle
             );
 
             catalogDatabase.RegisterCategory(elementCategory);
+            catalogDatabase.RegisterCategory(entityCategory);
             catalogDatabase.RegisterCategory(toolCategory);
             #endregion
 
@@ -108,6 +116,18 @@ namespace StardustSandbox.ContentBundle
             elementCategory.AddSubcategory(elementExplosiveSubcategory);
             elementCategory.AddSubcategory(elementTechnologySubcategory);
             elementCategory.AddSubcategory(elementSpecialSubcategory);
+            #endregion
+
+            #region Entities
+            SSubcategory entityLivingSubcategory = new(
+                parent: entityCategory,
+                identifier: "living",
+                name: "Living",
+                description: string.Empty,
+                iconTexture: game.AssetDatabase.GetTexture("icon_element_1")
+            );
+
+            entityCategory.AddSubcategory(entityLivingSubcategory);
             #endregion
 
             #region Tools
@@ -476,6 +496,17 @@ namespace StardustSandbox.ContentBundle
                 contentType: SItemContentType.Element,
                 subcategory: elementPowderSubcategory,
                 iconTexture: game.AssetDatabase.GetTexture("icon_element_39")
+            ));
+            #endregion
+
+            #region Entities
+            catalogDatabase.RegisterItem(new(
+                identifier: SEntityConstants.ANT_IDENTIFIER,
+                name: "Ant",
+                description: string.Empty,
+                contentType: SItemContentType.Entity,
+                subcategory: entityLivingSubcategory,
+                iconTexture: game.AssetDatabase.GetTexture("icon_element_1")
             ));
             #endregion
 
