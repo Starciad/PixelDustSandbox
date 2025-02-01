@@ -1,5 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
+using StardustSandbox.Core.Components;
+using StardustSandbox.Core.Components.Templates;
 using StardustSandbox.Core.Enums.World;
 using StardustSandbox.Core.Interfaces;
 using StardustSandbox.Core.Interfaces.Collections;
@@ -7,38 +10,48 @@ using StardustSandbox.Core.Interfaces.World;
 using StardustSandbox.Core.Objects;
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace StardustSandbox.Core.Entities
 {
     public abstract class SEntity : SGameObject, ISPoolableObject
     {
+        public SComponentContainer ComponentContainer => componentContainer;
         public SEntityDescriptor Descriptor => descriptor;
-
-        public Vector2 Position { get; set; }
-        public Vector2 Scale { get; set; }
-        public float Rotation { get; set; }
-        public SWorldLayer Layer { get; set; }
 
         protected ISWorld SWorldInstance { get; set; }
 
+        private readonly SComponentContainer componentContainer;
         private readonly SEntityDescriptor descriptor;
 
         public SEntity(ISGame gameInstance, SEntityDescriptor descriptor) : base(gameInstance)
         {
             this.descriptor = descriptor;
+            this.componentContainer = new(gameInstance);
 
             this.SWorldInstance = gameInstance.World;
 
             Reset();
         }
 
+        public override void Initialize()
+        {
+            this.componentContainer.Initialize();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            this.componentContainer.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            this.componentContainer.Draw(gameTime, spriteBatch);
+        }
+
         public void Reset()
         {
-            this.Position = Vector2.Zero;
-            this.Scale = Vector2.One;
-            this.Rotation = 0f;
-
+            this.componentContainer.Reset();
             OnRestarted();
         }
 
@@ -51,19 +64,22 @@ namespace StardustSandbox.Core.Entities
         {
             Dictionary<string, object> data = [];
 
-            OnSerialized(data);
+            foreach (SEntityComponent component in this.componentContainer.Components.Cast<SEntityComponent>())
+            {
+                component.Serialize(data);
+            }
 
             return data;
         }
-
         internal void Deserialize(IReadOnlyDictionary<string, object> data)
         {
-            OnDeserialized(data);
+            foreach (SEntityComponent component in this.componentContainer.Components.Cast<SEntityComponent>())
+            {
+                component.Deserialize(data);
+            }
         }
 
         #region Events
-        protected virtual void OnSerialized(IDictionary<string, object> data) { return; }
-        protected virtual void OnDeserialized(IReadOnlyDictionary<string, object> data) { return; }
         protected virtual void OnRestarted() { return; }
         protected virtual void OnDestroyed() { return; }
         #endregion

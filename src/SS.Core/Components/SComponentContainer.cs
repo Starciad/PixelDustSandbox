@@ -11,6 +11,8 @@ namespace StardustSandbox.Core.Components
 {
     public sealed class SComponentContainer(ISGame gameInstance) : SGameObject(gameInstance), ISResettable
     {
+        public IEnumerable<SComponent> Components => this.components;
+
         private readonly HashSet<SComponent> components = [];
 
         public override void Initialize()
