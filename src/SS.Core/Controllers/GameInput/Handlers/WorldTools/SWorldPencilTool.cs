@@ -49,11 +49,11 @@ namespace StardustSandbox.Core.Controllers.GameInput.Handlers.WorldTools
                     switch (worldModificationType)
                     {
                         case SWorldModificationType.Adding:
-                            DrawEntities(referencedItemIdentifier, SWorldMath.ToGlobalPosition(position.ToVector2()));
+                            DrawEntities(referencedItemIdentifier, SWorldMath.ToGlobalPosition(position));
                             break;
 
                         case SWorldModificationType.Removing:
-                            EraseEntities(SWorldMath.ToGlobalPosition(position.ToVector2()));
+                            EraseEntities(SWorldMath.ToGlobalPosition(position));
                             break;
 
                         default:
@@ -109,7 +109,7 @@ namespace StardustSandbox.Core.Controllers.GameInput.Handlers.WorldTools
         {
             _ = this.world.InstantiateEntity(entityIdentifier, (entity) =>
             {
-                SEntityTransformComponent transformComponent = entity.ComponentContainer.GetComponent<SEntityTransformComponent>();
+                STransformComponent transformComponent = entity.ComponentContainer.GetComponent<STransformComponent>();
 
                 transformComponent.Position = position;
             });
@@ -119,7 +119,7 @@ namespace StardustSandbox.Core.Controllers.GameInput.Handlers.WorldTools
         {
             foreach (SEntity entity in this.world.ActiveEntities.ToList())
             {
-                if (!entity.ComponentContainer.TryGetComponent(out SEntityTransformComponent transformComponent))
+                if (!entity.ComponentContainer.TryGetComponent(out STransformComponent transformComponent))
                 {
                     continue;
                 }

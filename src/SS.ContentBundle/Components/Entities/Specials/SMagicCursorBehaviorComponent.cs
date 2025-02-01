@@ -45,8 +45,8 @@ namespace StardustSandbox.ContentBundle.Components.Entities.Specials
         private SMoveState currentMoveState;
         private SBuildingState currentBuildingState;
 
-        private string selectedElement;
         private Vector2 targetPosition;
+        private string selectedElement;
 
         private int moveStateTimer = 0;
         private int buildingStateTimer = 0;
@@ -55,9 +55,9 @@ namespace StardustSandbox.ContentBundle.Components.Entities.Specials
         private readonly ISWorld world;
         private readonly SSize2 worldSize;
 
-        private readonly SEntityTransformComponent transformComponent;
+        private readonly STransformComponent transformComponent;
 
-        internal SMagicCursorBehaviorComponent(ISGame gameInstance, SEntity entityInstance, SEntityTransformComponent transformComponent) : base(gameInstance, entityInstance)
+        internal SMagicCursorBehaviorComponent(ISGame gameInstance, SEntity entityInstance, STransformComponent transformComponent) : base(gameInstance, entityInstance)
         {
             this.world = gameInstance.World;
             this.transformComponent = transformComponent;

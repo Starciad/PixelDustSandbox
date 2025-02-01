@@ -92,7 +92,7 @@ namespace StardustSandbox.Core.Elements
             OnDestroyed();
         }
 
-        public void Steps()
+        public void UpdateSteps()
         {
             if (this.EnableTemperature || this.EnableNeighborsAction)
             {

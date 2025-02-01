@@ -10,17 +10,17 @@ using System;
 
 namespace StardustSandbox.Core.Components.Common.Entities
 {
-    public sealed class SEntityRenderingComponent : SEntityComponent
+    public sealed class SRenderingComponent : SEntityComponent
     {
         public Rectangle? TextureClipArea { get; set; }
         public Color Color { get; set; }
         public Vector2 Origin { get; set; }
         public SpriteEffects SpriteEffect { get; set; }
 
-        private readonly SEntityTransformComponent transformComponent;
-        private readonly SEntityGraphicsComponent graphicsComponent;
+        private readonly STransformComponent transformComponent;
+        private readonly SGraphicsComponent graphicsComponent;
 
-        public SEntityRenderingComponent(ISGame gameInstance, SEntity entityInstance, SEntityTransformComponent transformComponent, SEntityGraphicsComponent graphicsComponent) : base(gameInstance, entityInstance)
+        public SRenderingComponent(ISGame gameInstance, SEntity entityInstance, STransformComponent transformComponent, SGraphicsComponent graphicsComponent) : base(gameInstance, entityInstance)
         {
             this.transformComponent = transformComponent;
             this.graphicsComponent = graphicsComponent;

@@ -35,6 +35,6 @@ namespace StardustSandbox.Core.Interfaces.Elements
         void Instantiate();
         void Destroy();
 
-        void Steps();
+        void UpdateSteps();
     }
 }

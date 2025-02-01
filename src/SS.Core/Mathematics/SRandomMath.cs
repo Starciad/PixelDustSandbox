@@ -15,12 +15,12 @@ namespace StardustSandbox.Core.Mathematics
 
         public static int Range(int max)
         {
-            return _random.Next(max);
+            return _random.Next(max + 1);
         }
 
         public static int Range(int min, int max)
         {
-            return _random.Next(min, max);
+            return _random.Next(min, max + 1);
         }
 
         public static bool Chance(int chance)

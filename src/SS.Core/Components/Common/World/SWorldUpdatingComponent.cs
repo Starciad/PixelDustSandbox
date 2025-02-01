@@ -3,6 +3,7 @@
 using StardustSandbox.Core.Components.Templates;
 using StardustSandbox.Core.Constants;
 using StardustSandbox.Core.Elements.Contexts;
+using StardustSandbox.Core.Entities;
 using StardustSandbox.Core.Enums.General;
 using StardustSandbox.Core.Enums.World;
 using StardustSandbox.Core.Helpers;
@@ -12,6 +13,7 @@ using StardustSandbox.Core.Interfaces.World;
 using StardustSandbox.Core.World.Chunking;
 using StardustSandbox.Core.World.Slots;
 
+using System;
 using System.Collections.Generic;
 
 namespace StardustSandbox.Core.Components.Common.World
@@ -24,6 +26,12 @@ namespace StardustSandbox.Core.Components.Common.World
         private readonly SElementContext elementUpdateContext = new(worldInstance);
 
         public override void Update(GameTime gameTime)
+        {
+            UpdateElements(gameTime);
+            UpdateEntities();
+        }
+
+        private void UpdateElements(GameTime gameTime)
         {
             foreach (SWorldSlot worldSlot in GetAllSlotsForUpdating())
             {
@@ -42,6 +50,14 @@ namespace StardustSandbox.Core.Components.Common.World
 
             this.updateCycleFlag = this.updateCycleFlag.GetNextCycle();
             this.stepCycleFlag = this.stepCycleFlag.GetNextCycle();
+        }
+
+        private void UpdateEntities()
+        {
+            foreach (SEntity entity in this.SWorldInstance.ActiveEntities)
+            {
+                entity.UpdateSteps();
+            }
         }
 
         private IEnumerable<SWorldSlot> GetAllSlotsForUpdating()
@@ -64,6 +80,8 @@ namespace StardustSandbox.Core.Components.Common.World
                 }
             }
         }
+
+        // ============================================== //
 
         private void UpdateWorldSlotLayerTarget(GameTime gameTime, Point position, SWorldLayer worldLayer, SWorldSlot worldSlot, SWorldThreadUpdateType updateType)
         {
@@ -97,7 +115,7 @@ namespace StardustSandbox.Core.Components.Common.World
                     }
 
                     worldSlotLayer.NextStepCycle();
-                    element.Steps();
+                    element.UpdateSteps();
                     break;
 
                 default:

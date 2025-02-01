@@ -49,6 +49,16 @@ namespace StardustSandbox.Core.Entities
             this.componentContainer.Draw(gameTime, spriteBatch);
         }
 
+        internal void UpdateSteps()
+        {
+            foreach (SEntityComponent entityComponent in this.componentContainer.Components.OfType<SEntityComponent>())
+            {
+                entityComponent.UpdateSteps();
+            }
+
+            OnStep();
+        }
+
         public void Reset()
         {
             this.componentContainer.Reset();
@@ -77,6 +87,7 @@ namespace StardustSandbox.Core.Entities
         }
 
         #region Events
+        protected virtual void OnStep() { return; }
         protected virtual void OnRestarted() { return; }
         protected virtual void OnDestroyed() { return; }
         #endregion

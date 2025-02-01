@@ -24,12 +24,12 @@ namespace StardustSandbox.Core.World
 
             this.Time.Update(gameTime);
 
-            UpdateWorld(gameTime);
+            UpdateSimulation(gameTime);
             UpdateEntities(gameTime);
             UpdateExplosions();
         }
 
-        private void UpdateWorld(GameTime gameTime)
+        private void UpdateSimulation(GameTime gameTime)
         {
             this.Simulation.Update();
 

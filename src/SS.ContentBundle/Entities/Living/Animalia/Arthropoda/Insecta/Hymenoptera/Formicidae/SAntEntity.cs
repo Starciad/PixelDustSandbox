@@ -19,9 +19,9 @@ namespace StardustSandbox.ContentBundle.Entities.Living.Animalia.Arthropoda.Inse
     {
         private readonly Texture2D texture;
 
-        private readonly SEntityTransformComponent transformComponent;
-        private readonly SEntityGraphicsComponent graphicsComponent;
-        private readonly SEntityRenderingComponent renderingComponent;
+        private readonly STransformComponent transformComponent;
+        private readonly SGraphicsComponent graphicsComponent;
+        private readonly SRenderingComponent renderingComponent;
 
         internal SAntEntity(ISGame gameInstance, SEntityDescriptor descriptor) : base(gameInstance, descriptor)
         {

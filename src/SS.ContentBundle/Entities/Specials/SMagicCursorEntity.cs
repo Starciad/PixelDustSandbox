@@ -20,9 +20,9 @@ namespace StardustSandbox.ContentBundle.Entities.Specials
     {
         private readonly Texture2D texture;
 
-        private readonly SEntityTransformComponent transformComponent;
-        private readonly SEntityGraphicsComponent graphicsComponent;
-        private readonly SEntityRenderingComponent renderingComponent;
+        private readonly STransformComponent transformComponent;
+        private readonly SGraphicsComponent graphicsComponent;
+        private readonly SRenderingComponent renderingComponent;
         private readonly SMagicCursorBehaviorComponent magicCursorBehaviorComponent;
 
         internal SMagicCursorEntity(ISGame gameInstance, SEntityDescriptor descriptor) : base(gameInstance, descriptor)

@@ -9,13 +9,13 @@ using System;
 
 namespace StardustSandbox.Core.Components.Common.Entities
 {
-    public sealed class SEntityTransformComponent : SEntityComponent
+    public sealed class STransformComponent : SEntityComponent
     {
         public Vector2 Position { get; set; }
         public Vector2 Scale { get; set; }
         public float Rotation { get; set; }
 
-        public SEntityTransformComponent(ISGame gameInstance, SEntity entityInstance) : base(gameInstance, entityInstance)
+        public STransformComponent(ISGame gameInstance, SEntity entityInstance) : base(gameInstance, entityInstance)
         {
             Reset();
         }

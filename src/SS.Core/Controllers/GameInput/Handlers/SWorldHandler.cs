@@ -55,7 +55,7 @@ namespace StardustSandbox.Core.Controllers.GameInput.Handlers
                 return;
             }
 
-            Point mousePosition = GetWorldGridPositionFromMouse(this.gameInstance.InputManager, this.gameInstance.CameraManager).ToPoint();
+            Point mousePosition = GetWorldGridPositionFromMouse(this.gameInstance.InputManager, this.gameInstance.CameraManager);
 
             switch (this.simulationPen.Tool)
             {
@@ -91,7 +91,7 @@ namespace StardustSandbox.Core.Controllers.GameInput.Handlers
             return this.simulationPlayer.CanModifyEnvironment && this.simulationPlayer.SelectedItem != null;
         }
 
-        private static Vector2 GetWorldGridPositionFromMouse(ISInputManager inputManager, ISCameraManager cameraManager)
+        private static Point GetWorldGridPositionFromMouse(ISInputManager inputManager, ISCameraManager cameraManager)
         {
             return SWorldMath.ToWorldPosition(ConvertScreenToWorld(cameraManager, inputManager.GetScaledMousePosition()));
         }

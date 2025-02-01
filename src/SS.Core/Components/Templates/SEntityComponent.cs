@@ -8,6 +8,11 @@ namespace StardustSandbox.Core.Components.Templates
     {
         protected SEntity SEntityInstance => entityInstance;
 
+        internal void UpdateSteps()
+        {
+            OnStep();
+        }
+
         internal object[] Serialize()
         {
             return OnSerialized();
@@ -17,6 +22,7 @@ namespace StardustSandbox.Core.Components.Templates
             OnDeserialized(data);
         }
 
+        protected virtual void OnStep() { return; }
         protected virtual object[] OnSerialized() { return []; }
         protected virtual void OnDeserialized(ReadOnlySpan<object> data) { return; }
     }
