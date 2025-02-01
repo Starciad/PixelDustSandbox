@@ -46,15 +46,23 @@ namespace StardustSandbox.Core.Components
 
         public T GetComponent<T>() where T : SComponent
         {
+            _ = TryGetComponent(out T value);
+            return value;
+        }
+
+        public bool TryGetComponent<T>(out T value) where T : SComponent
+        {
             foreach (SComponent component in this.components)
             {
                 if (component is T typedComponent)
                 {
-                    return typedComponent;
+                    value = typedComponent;
+                    return true;
                 }
             }
 
-            return null;
+            value = null;
+            return false;
         }
 
         public void Reset()

@@ -5,6 +5,7 @@ using StardustSandbox.Core.Ambient.Handlers;
 using StardustSandbox.Core.Colors;
 using StardustSandbox.Core.Constants;
 using StardustSandbox.Core.Enums.GameInput.Pen;
+using StardustSandbox.Core.Enums.Items;
 
 using System;
 
@@ -36,7 +37,7 @@ namespace StardustSandbox.Core
 
             // DETAILS
             this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, null);
-            DrawCursorPenActionArea();
+            DrawCursorPenAction();
             this.spriteBatch.End();
 
             // GUI
@@ -137,7 +138,7 @@ namespace StardustSandbox.Core
             this.spriteBatch.End();
         }
 
-        private void DrawCursorPenActionArea()
+        private void DrawCursorPenAction()
         {
             SPenTool penTool = this.gameInputController.Pen.Tool;
 
@@ -156,12 +157,10 @@ namespace StardustSandbox.Core
 
             foreach (Point point in this.gameInputController.Pen.GetShapePoints(alignedPosition))
             {
-                Vector2 worldPosition = new(
+                Vector2 screenPosition = this.cameraManager.WorldToScreen(new(
                     point.X * SWorldConstants.GRID_SIZE,
                     point.Y * SWorldConstants.GRID_SIZE
-                );
-
-                Vector2 screenPosition = this.cameraManager.WorldToScreen(worldPosition);
+                ));
 
                 this.spriteBatch.Draw(this.mouseActionSquareTexture, screenPosition, null, this.gameplaySettings.PreviewAreaColor, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
             }

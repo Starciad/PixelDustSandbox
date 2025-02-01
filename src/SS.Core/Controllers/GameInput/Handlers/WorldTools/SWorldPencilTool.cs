@@ -3,6 +3,7 @@
 using StardustSandbox.Core.Components.Common.Entities;
 using StardustSandbox.Core.Constants;
 using StardustSandbox.Core.Controllers.GameInput.Simulation;
+using StardustSandbox.Core.Entities;
 using StardustSandbox.Core.Enums.GameInput;
 using StardustSandbox.Core.Enums.Items;
 using StardustSandbox.Core.Interfaces;
@@ -10,6 +11,7 @@ using StardustSandbox.Core.Interfaces.Elements;
 using StardustSandbox.Core.Mathematics;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StardustSandbox.Core.Controllers.GameInput.Handlers.WorldTools
 {
@@ -115,7 +117,18 @@ namespace StardustSandbox.Core.Controllers.GameInput.Handlers.WorldTools
 
         private void EraseEntities(Vector2 position)
         {
+            foreach (SEntity entity in this.world.ActiveEntities.ToList())
+            {
+                if (!entity.ComponentContainer.TryGetComponent(out SEntityTransformComponent transformComponent))
+                {
+                    continue;
+                }
 
+                if (Vector2.Distance(position, transformComponent.Position) < this.simulationPen.Size * SWorldConstants.GRID_SIZE + (SWorldConstants.GRID_SIZE / 2))
+                {
+                    this.world.RemoveEntity(entity);
+                }
+            }
         }
 
         // ============================================ //
