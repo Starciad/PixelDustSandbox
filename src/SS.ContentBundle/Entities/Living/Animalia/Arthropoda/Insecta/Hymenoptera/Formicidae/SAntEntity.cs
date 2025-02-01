@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using StardustSandbox.ContentBundle.Components.Entities.Living.Animalia.Arthropoda.Insecta.Hymenoptera.Formicidae;
 using StardustSandbox.Core.Components.Common.Entities;
 using StardustSandbox.Core.Entities;
 using StardustSandbox.Core.Interfaces;
@@ -22,6 +23,7 @@ namespace StardustSandbox.ContentBundle.Entities.Living.Animalia.Arthropoda.Inse
         private readonly STransformComponent transformComponent;
         private readonly SGraphicsComponent graphicsComponent;
         private readonly SRenderingComponent renderingComponent;
+        private readonly SAntBehaviorComponent antBehaviorComponent;
 
         internal SAntEntity(ISGame gameInstance, SEntityDescriptor descriptor) : base(gameInstance, descriptor)
         {
@@ -30,10 +32,12 @@ namespace StardustSandbox.ContentBundle.Entities.Living.Animalia.Arthropoda.Inse
             this.transformComponent = new(this.SGameInstance, this);
             this.graphicsComponent = new(this.SGameInstance, this);
             this.renderingComponent = new(this.SGameInstance, this, this.transformComponent, this.graphicsComponent);
+            this.antBehaviorComponent = new(this.SGameInstance, this, this.transformComponent);
 
             _ = this.ComponentContainer.AddComponent(this.transformComponent);
             _ = this.ComponentContainer.AddComponent(this.graphicsComponent);
             _ = this.ComponentContainer.AddComponent(this.renderingComponent);
+            _ = this.ComponentContainer.AddComponent(this.antBehaviorComponent);
         }
 
         public override void Initialize()

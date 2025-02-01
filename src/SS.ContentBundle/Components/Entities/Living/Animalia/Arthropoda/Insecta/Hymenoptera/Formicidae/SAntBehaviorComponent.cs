@@ -23,7 +23,7 @@ namespace StardustSandbox.ContentBundle.Components.Entities.Living.Animalia.Arth
 
         public override void Initialize()
         {
-            
+            this.localPosition = SWorldMath.ToWorldPosition(this.transformComponent.Position);
         }
 
         public override void Update(GameTime gameTime)
@@ -41,7 +41,6 @@ namespace StardustSandbox.ContentBundle.Components.Entities.Living.Animalia.Arth
 
         private void UpdateSmoothMovement()
         {
-            this.localPosition = SWorldMath.ToWorldPosition(this.transformComponent.Position);
             this.transformComponent.Position = Vector2.Lerp(this.transformComponent.Position, this.TargetPosition, 0.1f);
         }
     }
