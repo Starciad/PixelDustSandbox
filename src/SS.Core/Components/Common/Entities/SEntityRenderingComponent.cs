@@ -7,7 +7,6 @@ using StardustSandbox.Core.Helpers;
 using StardustSandbox.Core.Interfaces;
 
 using System;
-using System.Collections.Generic;
 
 namespace StardustSandbox.Core.Components.Common.Entities
 {

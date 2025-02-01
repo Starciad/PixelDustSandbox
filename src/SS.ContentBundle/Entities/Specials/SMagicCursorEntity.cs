@@ -30,20 +30,22 @@ namespace StardustSandbox.ContentBundle.Entities.Specials
             this.texture = gameInstance.AssetDatabase.GetTexture("cursor_1");
 
             this.transformComponent = new(this.SGameInstance, this);
-            this.graphicsComponent = new(this.SGameInstance, this)
-            {
-                Texture = this.texture,
-            };
-            this.renderingComponent = new(this.SGameInstance, this, this.transformComponent, this.graphicsComponent)
-            {
-                TextureClipArea = new(new(0), new(36))
-            };
+            this.graphicsComponent = new(this.SGameInstance, this);
+            this.renderingComponent = new(this.SGameInstance, this, this.transformComponent, this.graphicsComponent);
             this.magicCursorBehaviorComponent = new(this.SGameInstance, this, this.transformComponent);
 
             _ = this.ComponentContainer.AddComponent(this.transformComponent);
             _ = this.ComponentContainer.AddComponent(this.graphicsComponent);
             _ = this.ComponentContainer.AddComponent(this.renderingComponent);
             _ = this.ComponentContainer.AddComponent(this.magicCursorBehaviorComponent);
+        }
+
+        public override void Initialize()
+        {
+            this.graphicsComponent.Texture = this.texture;
+            this.renderingComponent.TextureClipArea = new(new(0), new(36));
+
+            base.Initialize();
         }
 
         public override void Update(GameTime gameTime)

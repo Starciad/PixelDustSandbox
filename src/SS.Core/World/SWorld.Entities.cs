@@ -5,6 +5,7 @@ using StardustSandbox.Core.Interfaces.Collections;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StardustSandbox.Core.World
 {
@@ -72,10 +73,8 @@ namespace StardustSandbox.Core.World
 
         public void RemoveAllEntities()
         {
-            for (int i = 0; i < this.ActiveEntitiesCount; i++)
+            foreach (SEntity entity in this.ActiveEntities.ToList())
             {
-                SEntity entity = this.instantiatedEntities[i];
-
                 if (entity == null)
                 {
                     continue;
@@ -87,10 +86,8 @@ namespace StardustSandbox.Core.World
 
         public void DestroyAllEntities()
         {
-            for (int i = 0; i < this.ActiveEntitiesCount; i++)
+            foreach (SEntity entity in this.ActiveEntities.ToList())
             {
-                SEntity entity = this.instantiatedEntities[i];
-
                 if (entity == null)
                 {
                     continue;
