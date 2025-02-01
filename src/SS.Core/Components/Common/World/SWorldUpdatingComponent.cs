@@ -15,6 +15,7 @@ using StardustSandbox.Core.World.Slots;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StardustSandbox.Core.Components.Common.World
 {
@@ -54,8 +55,13 @@ namespace StardustSandbox.Core.Components.Common.World
 
         private void UpdateEntities()
         {
-            foreach (SEntity entity in this.SWorldInstance.ActiveEntities)
+            foreach (SEntity entity in this.SWorldInstance.ActiveEntities.ToList())
             {
+                if (entity == null)
+                {
+                    continue;
+                }
+
                 entity.UpdateSteps();
             }
         }

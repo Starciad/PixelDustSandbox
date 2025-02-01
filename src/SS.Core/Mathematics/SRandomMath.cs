@@ -25,7 +25,7 @@ namespace StardustSandbox.Core.Mathematics
 
         public static bool Chance(int chance)
         {
-            return Chance(chance, SMathConstants.TOTAL_CHANCE_DEFAULT_VALUE);
+            return Chance(chance, 100);
         }
 
         public static bool Chance(int chance, int total)
