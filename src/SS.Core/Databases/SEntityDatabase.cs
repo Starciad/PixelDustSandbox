@@ -18,7 +18,7 @@ namespace StardustSandbox.Core.Databases
             this.registeredDescriptors.Add(descriptor.Identifier, descriptor);
         }
 
-        public SEntityDescriptor GetEntityDescriptor(string entityIdentifier)
+        public SEntityDescriptor GetEntityDescriptorByIdentifier(string entityIdentifier)
         {
             return this.registeredDescriptors[entityIdentifier];
         }

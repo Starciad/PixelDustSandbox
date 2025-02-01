@@ -39,7 +39,7 @@ namespace StardustSandbox.Core.World
 
             if (!objectPool.TryGet(out ISPoolableObject value))
             {
-                SEntityDescriptor entityDescriptor = this.SGameInstance.EntityDatabase.GetEntityDescriptor(entityIdentifier);
+                SEntityDescriptor entityDescriptor = this.SGameInstance.EntityDatabase.GetEntityDescriptorByIdentifier(entityIdentifier);
                 value = entityDescriptor.CreateEntity();
             }
 

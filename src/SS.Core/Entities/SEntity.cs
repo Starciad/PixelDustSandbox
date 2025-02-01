@@ -3,12 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 using StardustSandbox.Core.Components;
 using StardustSandbox.Core.Components.Templates;
-using StardustSandbox.Core.Enums.World;
 using StardustSandbox.Core.Interfaces;
 using StardustSandbox.Core.Interfaces.Collections;
 using StardustSandbox.Core.Interfaces.World;
 using StardustSandbox.Core.Objects;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -60,22 +60,19 @@ namespace StardustSandbox.Core.Entities
             OnDestroyed();
         }
 
-        internal IReadOnlyDictionary<string, object> Serialize()
+        internal IEnumerable<object[]> Serialize()
         {
-            Dictionary<string, object> data = [];
-
-            foreach (SEntityComponent component in this.componentContainer.Components.Cast<SEntityComponent>())
-            {
-                component.Serialize(data);
-            }
-
-            return data;
+            return this.componentContainer.Components.OfType<SEntityComponent>().Select(component => component.Serialize());
         }
-        internal void Deserialize(IReadOnlyDictionary<string, object> data)
+        internal void Deserialize(IEnumerable<object[]> componentData)
         {
-            foreach (SEntityComponent component in this.componentContainer.Components.Cast<SEntityComponent>())
+            SEntityComponent[] components = this.componentContainer.Components.OfType<SEntityComponent>().ToArray();
+            object[][] dataArray = componentData as object[][] ?? componentData.ToArray();
+
+            int count = Math.Min(components.Length, dataArray.Length);
+            for (int i = 0; i < count; i++)
             {
-                component.Deserialize(data);
+                components[i].Deserialize(dataArray[i]);
             }
         }
 

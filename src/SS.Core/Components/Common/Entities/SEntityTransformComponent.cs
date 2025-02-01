@@ -2,10 +2,10 @@
 
 using StardustSandbox.Core.Components.Templates;
 using StardustSandbox.Core.Entities;
+using StardustSandbox.Core.Helpers;
 using StardustSandbox.Core.Interfaces;
 
 using System;
-using System.Collections.Generic;
 
 namespace StardustSandbox.Core.Components.Common.Entities
 {
@@ -27,18 +27,28 @@ namespace StardustSandbox.Core.Components.Common.Entities
             this.Rotation = 0f;
         }
 
-        protected override void OnSerialized(IDictionary<string, object> data)
+        protected override object[] OnSerialized()
         {
-            data.Add("transform_position", this.Position);
-            data.Add("transform_scale", this.Scale);
-            data.Add("transform_rotation", this.Rotation);
+            return [
+                this.Position.X, // [0]
+                this.Position.Y, // [1]
+                this.Scale.X, // [2]
+                this.Scale.Y, // [3]
+                this.Rotation, // [4]
+            ];
         }
 
-        protected override void OnDeserialized(IReadOnlyDictionary<string, object> data)
+        protected override void OnDeserialized(ReadOnlySpan<object> data)
         {
-            this.Position = (Vector2)data["transform_position"];
-            this.Scale = (Vector2)data["transform_position"];
-            this.Rotation = Convert.ToSingle(data["transform_position"]);
+            this.Position = new(
+                SConversionHelper.ConvertTo<float>(data[0]),
+                SConversionHelper.ConvertTo<float>(data[1])
+            );
+            this.Scale = new(
+                SConversionHelper.ConvertTo<float>(data[2]),
+                SConversionHelper.ConvertTo<float>(data[3])
+            );
+            this.Rotation = SConversionHelper.ConvertTo<float>(data[4]);
         }
     }
 }

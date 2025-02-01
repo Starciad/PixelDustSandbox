@@ -1,6 +1,6 @@
 ﻿using StardustSandbox.Core.Interfaces;
 using StardustSandbox.Core.Entities;
-using System.Collections.Generic;
+using System;
 
 namespace StardustSandbox.Core.Components.Templates
 {
@@ -8,16 +8,16 @@ namespace StardustSandbox.Core.Components.Templates
     {
         protected SEntity SEntityInstance => entityInstance;
 
-        internal void Serialize(IDictionary<string, object> data)
+        internal object[] Serialize()
         {
-            OnSerialized(data);
+            return OnSerialized();
         }
-        internal void Deserialize(IReadOnlyDictionary<string, object> data)
+        internal void Deserialize(ReadOnlySpan<object> data)
         {
             OnDeserialized(data);
         }
 
-        protected virtual void OnSerialized(IDictionary<string, object> data) { return; }
-        protected virtual void OnDeserialized(IReadOnlyDictionary<string, object> data) { return; }
+        protected virtual object[] OnSerialized() { return []; }
+        protected virtual void OnDeserialized(ReadOnlySpan<object> data) { return; }
     }
 }

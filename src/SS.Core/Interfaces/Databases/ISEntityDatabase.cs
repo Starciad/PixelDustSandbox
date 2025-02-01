@@ -9,6 +9,6 @@ namespace StardustSandbox.Core.Interfaces.Databases
         IReadOnlyDictionary<string, SEntityDescriptor> RegisteredDescriptors { get; }
 
         void RegisterEntityDescriptor(SEntityDescriptor descriptor);
-        SEntityDescriptor GetEntityDescriptor(string identifier);
+        SEntityDescriptor GetEntityDescriptorByIdentifier(string identifier);
     }
 }

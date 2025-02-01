@@ -27,20 +27,23 @@ namespace StardustSandbox.ContentBundle.Entities.Specials
 
         internal SMagicCursorEntity(ISGame gameInstance, SEntityDescriptor descriptor) : base(gameInstance, descriptor)
         {
+            this.texture = gameInstance.AssetDatabase.GetTexture("cursor_1");
+
             this.transformComponent = new(this.SGameInstance, this);
-            this.graphicsComponent = new(this.SGameInstance, this);
-            this.renderingComponent = new(this.SGameInstance, this, this.transformComponent, this.graphicsComponent);
+            this.graphicsComponent = new(this.SGameInstance, this)
+            {
+                Texture = this.texture,
+            };
+            this.renderingComponent = new(this.SGameInstance, this, this.transformComponent, this.graphicsComponent)
+            {
+                TextureClipArea = new(new(0), new(36))
+            };
             this.magicCursorBehaviorComponent = new(this.SGameInstance, this, this.transformComponent);
 
             _ = this.ComponentContainer.AddComponent(this.transformComponent);
             _ = this.ComponentContainer.AddComponent(this.graphicsComponent);
             _ = this.ComponentContainer.AddComponent(this.renderingComponent);
             _ = this.ComponentContainer.AddComponent(this.magicCursorBehaviorComponent);
-
-            // Graphics
-            this.texture = gameInstance.AssetDatabase.GetTexture("cursor_1");
-            this.graphicsComponent.SetTexture(this.texture);
-            this.renderingComponent.TextureClipArea = new Rectangle(new(0), new(36));
         }
 
         public override void Update(GameTime gameTime)

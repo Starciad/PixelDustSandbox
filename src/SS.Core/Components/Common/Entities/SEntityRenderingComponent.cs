@@ -3,8 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 using StardustSandbox.Core.Components.Templates;
 using StardustSandbox.Core.Entities;
+using StardustSandbox.Core.Helpers;
 using StardustSandbox.Core.Interfaces;
 
+using System;
 using System.Collections.Generic;
 
 namespace StardustSandbox.Core.Components.Common.Entities
@@ -15,11 +17,6 @@ namespace StardustSandbox.Core.Components.Common.Entities
         public Color Color { get; set; }
         public Vector2 Origin { get; set; }
         public SpriteEffects SpriteEffect { get; set; }
-
-        private const string TEXTURE_CLIP_AREA_KEY = "rendering_texture_clip_area";
-        private const string COLOR_KEY = "rendering_color";
-        private const string ORIGIN_KEY = "rendering_origin";
-        private const string SPRITE_EFFECTS_KEY = "rendering_sprite_effects";
 
         private readonly SEntityTransformComponent transformComponent;
         private readonly SEntityGraphicsComponent graphicsComponent;
@@ -50,28 +47,24 @@ namespace StardustSandbox.Core.Components.Common.Entities
             this.SpriteEffect = SpriteEffects.None;
         }
 
-        protected override void OnSerialized(IDictionary<string, object> data)
+        protected override object[] OnSerialized()
         {
-            if (this.TextureClipArea != null)
-            {
-                data.Add(TEXTURE_CLIP_AREA_KEY, this.TextureClipArea);
-            }
-            
-            data.Add(COLOR_KEY, this.Color);
-            data.Add(ORIGIN_KEY, this.Origin);
-            data.Add(SPRITE_EFFECTS_KEY, this.SpriteEffect);
+            return [
+                this.Color.R, // [0]
+                this.Color.G, // [1]
+                this.Color.B, // [2]
+                this.Color.A, // [3]
+            ];
         }
 
-        protected override void OnDeserialized(IReadOnlyDictionary<string, object> data)
+        protected override void OnDeserialized(ReadOnlySpan<object> data)
         {
-            if (data.TryGetValue(TEXTURE_CLIP_AREA_KEY, out object value))
-            {
-                this.TextureClipArea = (Rectangle)value;
-            }
-            
-            this.Color = (Color)data[COLOR_KEY];
-            this.Origin = (Vector2)data[ORIGIN_KEY];
-            this.SpriteEffect = (SpriteEffects)data[SPRITE_EFFECTS_KEY];
+            this.Color = new(
+                SConversionHelper.ConvertTo<byte>(data[0]),
+                SConversionHelper.ConvertTo<byte>(data[1]),
+                SConversionHelper.ConvertTo<byte>(data[2]),
+                SConversionHelper.ConvertTo<byte>(data[3])
+            );
         }
     }
 }

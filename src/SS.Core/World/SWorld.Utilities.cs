@@ -111,7 +111,7 @@ namespace StardustSandbox.Core.World
         {
             _ = InstantiateEntity(resourceContainer.FindValueByIndex(saveFileEntity.EntityIndex), (SEntity entity) =>
             {
-                entity.Deserialize(saveFileEntity.Data);
+                entity.Deserialize(saveFileEntity.ComponentData);
             });
         }
         #endregion

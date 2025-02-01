@@ -6,25 +6,13 @@ using StardustSandbox.Core.Interfaces;
 
 namespace StardustSandbox.Core.Components.Common.Entities
 {
-    public sealed class SEntityGraphicsComponent : SEntityComponent
+    public sealed class SEntityGraphicsComponent(ISGame gameInstance, SEntity entityInstance) : SEntityComponent(gameInstance, entityInstance)
     {
-        public Texture2D Texture => this.texture;
-
-        private Texture2D texture;
-
-        public SEntityGraphicsComponent(ISGame gameInstance, SEntity entityInstance) : base(gameInstance, entityInstance)
-        {
-            Reset();
-        }
-
-        public void SetTexture(Texture2D texture)
-        {
-            this.texture = texture;
-        }
+        public Texture2D Texture { get; set; }
 
         public override void Reset()
         {
-            this.texture = null;
+            this.Texture = null;
         }
     }
 }

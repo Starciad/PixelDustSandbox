@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 
 using StardustSandbox.Core.Enums.General;
 using StardustSandbox.Core.IO.Files.Saving.World.Information;
+using StardustSandbox.Core.IO.Files.Saving.World.Information.Resources;
 using StardustSandbox.Core.World.Slots;
 
 namespace StardustSandbox.Core.IO.Files.Saving.World.Content.Slots
@@ -41,9 +42,9 @@ namespace StardustSandbox.Core.IO.Files.Saving.World.Content.Slots
 
         }
 
-        public SSaveFileWorldSlotLayer(SSaveFileWorldResources resources, SWorldSlotLayer worldSlotLayer)
+        public SSaveFileWorldSlotLayer(SSaveFileResourceContainer container, SWorldSlotLayer worldSlotLayer)
         {
-            this.ElementIndex = resources.Elements.FindIndexByValue(worldSlotLayer.Element.Identifier);
+            this.ElementIndex = container.FindIndexByValue(worldSlotLayer.Element.Identifier);
             this.Temperature = worldSlotLayer.Temperature;
             this.FreeFalling = worldSlotLayer.FreeFalling;
             this.ColorModifier = worldSlotLayer.ColorModifier;
@@ -52,7 +53,7 @@ namespace StardustSandbox.Core.IO.Files.Saving.World.Content.Slots
 
             if (worldSlotLayer.StoredElement != null)
             {
-                this.StoredElementIndex = resources.Elements.FindIndexByValue(worldSlotLayer.StoredElement.Identifier);
+                this.StoredElementIndex = container.FindIndexByValue(worldSlotLayer.StoredElement.Identifier);
             }
         }
     }

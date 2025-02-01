@@ -91,8 +91,8 @@ namespace StardustSandbox.Core.IO.Handlers
 
                     Content = new()
                     {
-                        Slots = CreateWorldSlotsData(resources, world, world.Infos.Size),
-                        Entities = CreateEntityData(resources, world),
+                        Slots = CreateWorldSlotsData(resources.Elements, world, world.Infos.Size),
+                        Entities = CreateEntityData(resources.Entities, world),
                     },
                 },
             };
@@ -225,7 +225,7 @@ namespace StardustSandbox.Core.IO.Handlers
             return container;
         }
 
-        private static IEnumerable<SSaveFileWorldSlot> CreateWorldSlotsData(SSaveFileWorldResources resources, ISWorld world, SSize2 worldSize)
+        private static IEnumerable<SSaveFileWorldSlot> CreateWorldSlotsData(SSaveFileResourceContainer container, ISWorld world, SSize2 worldSize)
         {
             for (int y = 0; y < worldSize.Height; y++)
             {
@@ -235,17 +235,17 @@ namespace StardustSandbox.Core.IO.Handlers
 
                     if (!world.IsEmptyWorldSlot(position))
                     {
-                        yield return new(resources, world.GetWorldSlot(position));
+                        yield return new(container, world.GetWorldSlot(position));
                     }
                 }
             }
         }
 
-        private static IEnumerable<SSaveFileEntity> CreateEntityData(SSaveFileWorldResources resources, ISWorld world)
+        private static IEnumerable<SSaveFileEntity> CreateEntityData(SSaveFileResourceContainer container, ISWorld world)
         {
             foreach (SEntity entity in world.ActiveEntities)
             {
-                yield return new(resources, entity);
+                yield return new(container, entity);
             }
         }
     }

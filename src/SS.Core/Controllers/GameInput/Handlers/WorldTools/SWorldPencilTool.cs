@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 
+using StardustSandbox.Core.Components.Common.Entities;
+using StardustSandbox.Core.Constants;
 using StardustSandbox.Core.Controllers.GameInput.Simulation;
 using StardustSandbox.Core.Enums.GameInput;
 using StardustSandbox.Core.Enums.Items;
 using StardustSandbox.Core.Interfaces;
 using StardustSandbox.Core.Interfaces.Elements;
+using StardustSandbox.Core.Mathematics;
 
 using System.Collections.Generic;
 
@@ -38,6 +41,22 @@ namespace StardustSandbox.Core.Controllers.GameInput.Handlers.WorldTools
                             break;
                     }
 
+                    break;
+
+                case SItemContentType.Entity:
+                    switch (worldModificationType)
+                    {
+                        case SWorldModificationType.Adding:
+                            DrawEntities(referencedItemIdentifier, SWorldMath.ToGlobalPosition(position.ToVector2()));
+                            break;
+
+                        case SWorldModificationType.Removing:
+                            EraseEntities(SWorldMath.ToGlobalPosition(position.ToVector2()));
+                            break;
+
+                        default:
+                            break;
+                    }
                     break;
 
                 case SItemContentType.Tool:
@@ -79,6 +98,24 @@ namespace StardustSandbox.Core.Controllers.GameInput.Handlers.WorldTools
             {
                 this.world.RemoveElement(position, this.simulationPen.Layer);
             }
+        }
+
+        // ============================================ //
+        // Entities
+
+        private void DrawEntities(string entityIdentifier, Vector2 position)
+        {
+            _ = this.world.InstantiateEntity(entityIdentifier, (entity) =>
+            {
+                SEntityTransformComponent transformComponent = entity.ComponentContainer.GetComponent<SEntityTransformComponent>();
+
+                transformComponent.Position = position;
+            });
+        }
+
+        private void EraseEntities(Vector2 position)
+        {
+
         }
 
         // ============================================ //

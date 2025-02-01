@@ -26,7 +26,7 @@
         public const byte GRAPHICS_ELEMENTS_LENGTH = 039;
 
         // Entities
-        public const byte GRAPHICS_ENTITIES_LENGTH = 000;
+        public const byte GRAPHICS_ENTITIES_LENGTH = 001;
 
         // Game
         public const byte GRAPHICS_GAME_ICONS_LENGTH = 001;

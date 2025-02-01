@@ -3,6 +3,7 @@
 using Microsoft.Xna.Framework;
 
 using StardustSandbox.Core.IO.Files.Saving.World.Information;
+using StardustSandbox.Core.IO.Files.Saving.World.Information.Resources;
 using StardustSandbox.Core.World.Slots;
 
 namespace StardustSandbox.Core.IO.Files.Saving.World.Content.Slots
@@ -32,18 +33,18 @@ namespace StardustSandbox.Core.IO.Files.Saving.World.Content.Slots
 
         }
 
-        public SSaveFileWorldSlot(SSaveFileWorldResources resources, SWorldSlot worldSlot)
+        public SSaveFileWorldSlot(SSaveFileResourceContainer container, SWorldSlot worldSlot)
         {
             this.Position = worldSlot.Position;
 
             if (!worldSlot.ForegroundLayer.IsEmpty)
             {
-                this.ForegroundLayer = new(resources, worldSlot.ForegroundLayer);
+                this.ForegroundLayer = new(container, worldSlot.ForegroundLayer);
             }
 
             if (!worldSlot.BackgroundLayer.IsEmpty)
             {
-                this.BackgroundLayer = new(resources, worldSlot.BackgroundLayer);
+                this.BackgroundLayer = new(container, worldSlot.BackgroundLayer);
             }
         }
     }
